@@ -20,3 +20,7 @@ math_vector.o: math_vector.cpp
 
 clean:
 	rm -rf *.o planet
+
+publish:
+	-rm -rf *.o
+	-mv	planet ../bin
