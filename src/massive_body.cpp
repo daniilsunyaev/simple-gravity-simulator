@@ -4,15 +4,15 @@ constexpr float MassiveBody::GRAVITY_CONST;
 
 MassiveBody::MassiveBody(MathVector t_position, float t_mass) :
   m_mass(t_mass), m_position(t_position),
-  m_acceleration(t_position.get_dimensionality()),
-  m_velocity(t_position.get_dimensionality()) {};
+  m_acceleration(t_position.size()),
+  m_velocity(t_position.size()) {};
 
 void MassiveBody::add_external_force(MathVector t_force) {
   m_forces.push(t_force);
 }
 
-void MassiveBody::set_attractor(MassiveBody *t_attractor_p) {
-  m_attractors.push_back(t_attractor_p);
+void MassiveBody::add_attractor(MassiveBody* t_attractor_pointer) {
+  m_attractors.push_back(t_attractor_pointer);
 }
 
 void MassiveBody::set_position(MathVector t_position) {
@@ -31,23 +31,26 @@ MathVector MassiveBody::get_position() {
   return m_position;
 }
 
+float MassiveBody::get_position(std::size_t t_dimension) {
+  return m_position[t_dimension];
+}
+
 MathVector MassiveBody::calculate_acceleration() {
-  MathVector resulting_forse(m_position.get_dimensionality());
-  std::list<MassiveBody*>::iterator iter;
+  MathVector resulting_forse(m_position.size());
 
-  for(iter = m_attractors.begin(); iter != m_attractors.end(); iter++) {
-    MathVector attractor_position = (*iter)->m_position;
-    float attractor_mass = (*iter)->m_mass;
+  for(const auto& attractor : m_attractors) {
+    MathVector attractor_position = attractor->m_position;
+    float attractor_mass = attractor->m_mass;
 
-    resulting_forse += (attractor_position - m_position).norm() * 
+    resulting_forse += (attractor_position - m_position).get_norm() *
       GRAVITY_CONST * m_mass * attractor_mass /
-      (attractor_position - m_position).sqrabs();
+      (attractor_position - m_position).get_sqrabs();
   }
 
-  // while(!m_forces.empty()) {
-  //   resulting_forse += m_forces.top();
-  //   m_forces.pop();
-  // }
+  while(!m_forces.empty()) {
+    resulting_forse += m_forces.top();
+    m_forces.pop();
+  }
 
   m_acceleration = resulting_forse / m_mass;
   return m_acceleration;

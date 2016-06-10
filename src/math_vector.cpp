@@ -6,87 +6,83 @@
 MathVector::MathVector(std::vector<float> t_coordinates) :
   m_coordinates(t_coordinates) {};
 
-MathVector::MathVector(int t_dimensions) :
+MathVector::MathVector(std::size_t t_dimensions) :
   m_coordinates(t_dimensions, 0) {};
 
-float MathVector::get_coordinate(int t_coordinate_num) const {
-  return m_coordinates.at(t_coordinate_num);
-}
-
-std::vector<float> MathVector::get_std_vector() const {
-  return m_coordinates;
-}
-
-short MathVector::get_dimensionality() const {
+std::size_t MathVector::size() const {
   return m_coordinates.size();
 }
 
-float MathVector::abs() {
-  return sqrt(sqrabs());
+float MathVector::get_abs() const {
+  return sqrt(get_sqrabs());
 }
 
-float MathVector::sqrabs() {
+float MathVector::get_sqrabs() const {
   float result = 0;
-  for(int i = 0; i < m_coordinates.size(); i++) {
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
     float component = m_coordinates.at(i);
     result += component * component;
   }
   return result;
 }
 
-MathVector MathVector::norm() {
-  return *this / abs();
+MathVector MathVector::get_norm() const {
+  return *this / get_abs();
 }
 
-MathVector MathVector::operator+(const MathVector& t_operand) {
-  if(m_coordinates.size() != t_operand.get_dimensionality()) {
+MathVector MathVector::operator+(const MathVector& t_operand) const {
+  if(m_coordinates.size() != t_operand.size()) {
     throw std::out_of_range("Dimensionality mismatch!");
   }
   decltype(m_coordinates) new_vector;
 
-  for(int i = 0; i < m_coordinates.size(); i++) {
-    new_vector.push_back(m_coordinates.at(i) + t_operand.get_coordinate(i));
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
+    new_vector.push_back(m_coordinates.at(i) + t_operand[i]);
   }
   return MathVector(new_vector);
 }
 
-MathVector MathVector::operator-(const MathVector& t_operand) {
-  if(m_coordinates.size() != t_operand.get_dimensionality()) {
+MathVector MathVector::operator-(const MathVector& t_operand) const {
+  if(m_coordinates.size() != t_operand.size()) {
     throw std::out_of_range("Dimensionality mismatch!");
   }
   decltype(m_coordinates) new_vector;
 
-  for(int i = 0; i < m_coordinates.size(); i++) {
-    new_vector.push_back(m_coordinates.at(i) - t_operand.get_coordinate(i));
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
+    new_vector.push_back(m_coordinates.at(i) - t_operand[i]);
   }
   return MathVector(new_vector);
 }
 
-MathVector MathVector::operator/(const float& t_operand) {
+MathVector MathVector::operator/(const float& t_operand) const {
   decltype(m_coordinates) new_vector;
 
-  for(int i = 0; i < m_coordinates.size(); i++) {
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
     new_vector.push_back(m_coordinates.at(i) / t_operand);
   }
   return MathVector(new_vector);
 }
 
-MathVector MathVector::operator*(const float& t_operand) {
+MathVector MathVector::operator*(const float& t_operand) const {
   decltype(m_coordinates) new_vector;
 
-  for(int i = 0; i < m_coordinates.size(); i++) {
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
     new_vector.push_back(m_coordinates.at(i) * t_operand);
   }
   return MathVector(new_vector);
 }
 
 MathVector MathVector::operator+=(const MathVector& t_operand) {
-  if(m_coordinates.size() != t_operand.get_dimensionality()) {
+  if(m_coordinates.size() != t_operand.size()) {
     throw std::out_of_range("Dimensionality mismatch!");
   }
 
-  for(int i = 0; i < m_coordinates.size(); i++) {
-    m_coordinates.at(i) += t_operand.get_coordinate(i);
+  for(std::size_t i = 0; i < m_coordinates.size(); i++) {
+    m_coordinates.at(i) += t_operand[i];
   }
   return *this;
+}
+
+float MathVector::operator[](std::size_t t_dimension) const {
+  return m_coordinates.at(t_dimension);
 }
