@@ -1,4 +1,4 @@
-CC=g++ -L../lib/ -Wl,-rpath=../lib/
+CC=g++ -Wl,-rpath,../lib/
 
 CFLAGS=-c -Wall -std=c++11
 SDLFLAGS=-lSDL2 -lSDL2_image
