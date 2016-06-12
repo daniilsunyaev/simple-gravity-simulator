@@ -25,19 +25,10 @@ int main() {
 void run_loop(SDL_Renderer* t_renderer) {
   std::list<MassiveBody*> moving_objects;
 
-  MathVector sun_position({400, 300});
-  MathVector earth_position({200, 300});
-  MathVector moon_position({205, 300});
-  MathVector mars_position({105, 300});
-  MathVector earth_velocity({0, 2});
-  MathVector sun_velocity({0, 0.0});
-  MathVector moon_velocity({0, 2.5});
-  MathVector mars_velocity({0, 1.5});
-
-  MassiveBody sun(1000.0F, sun_position, sun_velocity);
-  MassiveBody earth(1, earth_position, earth_velocity);
-  MassiveBody mars(1, mars_position, mars_velocity);
-  MassiveBody moon(0.1, moon_position, moon_velocity);
+  MassiveBody sun(1000.0F, {400, 300}, {0, 0.0});
+  MassiveBody earth(1, {200, 300}, {0, 2});
+  MassiveBody mars(1, {105, 300}, {0, 1.5});
+  MassiveBody moon(0.1, {205, 300}, {0, 1.6});
 
   sun.add_attractor(&earth);
   moving_objects.push_back(&sun);

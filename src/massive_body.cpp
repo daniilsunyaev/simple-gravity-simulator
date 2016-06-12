@@ -12,6 +12,20 @@ MassiveBody::MassiveBody(float t_mass, MathVector t_position, MathVector t_veloc
   m_acceleration(t_position.size()),
   m_velocity(t_velocity) {};
 
+MassiveBody::MassiveBody(float t_mass, std::initializer_list<float> t_position) :
+  m_mass(t_mass), m_position(t_position),
+  m_acceleration(t_position.size()),
+  m_velocity(t_position.size()) {};
+
+MassiveBody::MassiveBody(
+    float t_mass,
+    std::initializer_list<float> t_position,
+    std::initializer_list<float> t_velocity
+    ) :
+  m_mass(t_mass), m_position(t_position),
+  m_acceleration(t_position.size()),
+  m_velocity(t_velocity) {};
+
 void MassiveBody::add_external_force(MathVector t_force) {
   m_forces.push(t_force);
 }
