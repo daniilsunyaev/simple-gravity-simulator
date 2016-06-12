@@ -1,22 +1,19 @@
 CC=g++
 
-CFLAGS=-c -Wall -std=c++11
-SDLFLAGS=-lSDL2 -lSDL2_image
+CFLAGS=-c -Wall -pedantic -std=c++11
+LDFLAGS=-lSDL2 -lSDL2_image
 
-all: solar.o init_graphics.o massive_body.o math_vector.o
-	$(CC) $(SDLFLAGS) solar.o init_graphics.o math_vector.o massive_body.o -o planet
+SOURCES=solar.cpp init_graphics.cpp massive_body_controller.cpp massive_body.cpp math_vector.cpp graphical_reflection.cpp pixel_reflection.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=planet
 
-solar.o: solar.cpp
-	$(CC) $(CFLAGS) solar.cpp
+all: $(SOURCES) $(EXECUTABLE)
 
-init_graphics.o: init_graphics.cpp
-	$(CC) $(CFLAGS) init_graphics.cpp
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-massive_body.o: massive_body.cpp
-	$(CC) $(CFLAGS) massive_body.cpp
-
-math_vector.o: math_vector.cpp
-	$(CC) $(CFLAGS) math_vector.cpp
+%.o: %.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	rm -rf *.o planet

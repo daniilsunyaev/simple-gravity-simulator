@@ -1,11 +1,10 @@
+#pragma once
 #include <vector>
 
 struct MathVector {
   MathVector(std::vector<float> t_coordinates);
   MathVector(std::size_t t_dimensions);
-  //std::vector<float> get_std_vector() const;
   std::size_t size() const;
-  //short get_dimensionality() const;
   float get_abs() const;
   float get_sqrabs() const;
   MathVector get_norm() const;
