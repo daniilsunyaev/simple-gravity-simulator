@@ -4,10 +4,10 @@
 #include "math_vector.h"
 
 MathVector::MathVector(std::vector<float> t_coordinates) :
-  m_coordinates(t_coordinates) {};
+  m_coordinates(t_coordinates) {}
 
 MathVector::MathVector(std::size_t t_dimensions) :
-  m_coordinates(t_dimensions, 0) {};
+  m_coordinates(t_dimensions, 0) {}
 
 std::size_t MathVector::size() const {
   return m_coordinates.size();
