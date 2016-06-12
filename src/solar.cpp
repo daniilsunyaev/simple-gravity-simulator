@@ -34,29 +34,25 @@ void run_loop(SDL_Renderer* t_renderer) {
   MathVector moon_velocity({0, 2.5});
   MathVector mars_velocity({0, 1.5});
 
-  MassiveBody sun(sun_position, 1000.0F);
-  MassiveBody earth(earth_position, 1);
-  MassiveBody mars(mars_position, 1);
-  MassiveBody moon(moon_position, 0.1);
+  MassiveBody sun(1000.0F, sun_position, sun_velocity);
+  MassiveBody earth(1, earth_position, earth_velocity);
+  MassiveBody mars(1, mars_position, mars_velocity);
+  MassiveBody moon(0.1, moon_position, moon_velocity);
 
   sun.add_attractor(&earth);
   moving_objects.push_back(&sun);
-  sun.set_velocity(sun_velocity);
 
   earth.add_attractor(&sun);
   earth.add_attractor(&mars);
   moving_objects.push_back(&earth);
-  earth.set_velocity(earth_velocity);
 
   moon.add_attractor(&sun);
   moon.add_attractor(&earth);
   moving_objects.push_back(&moon);
-  moon.set_velocity(moon_velocity);
 
   mars.add_attractor(&sun);
   mars.add_attractor(&earth);
   moving_objects.push_back(&mars);
-  mars.set_velocity(mars_velocity);
 
   bool loop = true;
   SDL_Event event;

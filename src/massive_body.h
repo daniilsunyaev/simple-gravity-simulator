@@ -4,7 +4,8 @@
 
 class MassiveBody {
   public:
-    MassiveBody(MathVector t_position, float t_mass);
+    MassiveBody(float t_mass, MathVector t_position);
+    MassiveBody(float t_mass, MathVector t_position, MathVector t_velocity);
     void add_external_force(MathVector t_force);
     void add_attractor(MassiveBody* t_attractor);
     MathVector calculate_acceleration();
