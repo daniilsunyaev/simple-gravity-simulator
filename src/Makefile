@@ -3,7 +3,7 @@ CC=g++
 CFLAGS=-c -Wall -pedantic -std=c++11
 LDFLAGS=-lSDL2 -lSDL2_image
 
-SOURCES=solar.cpp init_graphics.cpp massive_body.cpp math_vector.cpp graphical_reflection.cpp pixel_reflection.cpp
+SOURCES=solar.cpp init_graphics.cpp massive_body_controller.cpp massive_body.cpp math_vector.cpp graphical_reflection.cpp pixel_reflection.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=planet
 

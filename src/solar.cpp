@@ -1,6 +1,7 @@
 #include <iostream>
-#include <algorithm>
 #include "massive_body.h"
+#include "massive_body_controller.h"
+#include "pixel_reflection.h"
 #include "init_graphics.h"
 
 void run_loop(SDL_Renderer* t_renderer);
@@ -23,27 +24,29 @@ int main() {
 }
 
 void run_loop(SDL_Renderer* t_renderer) {
-  std::list<MassiveBody*> moving_objects;
+  std::list<MassiveBodyController*> world;
 
-  MassiveBody sun(1000.0F, {400, 300}, {0, 0.0});
-  MassiveBody earth(1, {200, 300}, {0, 2});
-  MassiveBody mars(1, {105, 300}, {0, 1.5});
-  MassiveBody moon(0.1, {205, 300}, {0, 1.6});
+  MassiveBody sun(3.3e3, {400, 300}, {0, 0});
+  PixelReflection sun_image(t_renderer, 0xFF, 0xFF, 0);
 
-  sun.add_attractor(&earth);
-  moving_objects.push_back(&sun);
+  MassiveBody earth(1e0, {200, 300}, {0, 3.5});
+  PixelReflection earth_image(t_renderer, 0x1F, 0x1F, 0xFF);
 
-  earth.add_attractor(&sun);
-  earth.add_attractor(&mars);
-  moving_objects.push_back(&earth);
+  MassiveBody moon(1e-2, {206, 300}, {0, 3.9});
+  PixelReflection moon_image(t_renderer, 0xBB, 0xBB, 0xBB);
 
-  moon.add_attractor(&sun);
-  moon.add_attractor(&earth);
-  moving_objects.push_back(&moon);
+  MassiveBody mars(1e-1, {105, 300}, {0, 3.5});
+  PixelReflection mars_image(t_renderer, 0xFF, 0xBB, 0x10);
 
-  mars.add_attractor(&sun);
-  mars.add_attractor(&earth);
-  moving_objects.push_back(&mars);
+  MassiveBodyController sun_controller(sun, {&earth, &mars}, sun_image);
+  MassiveBodyController earth_controller(earth, {&sun, &mars, &moon}, earth_image);
+  MassiveBodyController moon_controller(moon, {&sun, &earth, &mars}, moon_image);
+  MassiveBodyController mars_controller(mars, {&sun, &earth}, mars_image);
+
+  world.push_back(&sun_controller);
+  world.push_back(&earth_controller);
+  world.push_back(&moon_controller);
+  world.push_back(&mars_controller);
 
   bool loop = true;
   SDL_Event event;
@@ -53,28 +56,14 @@ void run_loop(SDL_Renderer* t_renderer) {
       if(event.type == SDL_QUIT) { loop = false; }
     }
 
-    for_each(moving_objects.begin(), moving_objects.end(), move_objects);
-
     SDL_SetRenderDrawColor( t_renderer, 0, 0, 0, 0);
     SDL_RenderClear(t_renderer);
 
-    SDL_SetRenderDrawColor( t_renderer, 0xFF, 0xFF, 0, 0xFF );
-    SDL_RenderDrawPoint(t_renderer, sun.get_position(0), sun.get_position(1));
-
-    SDL_SetRenderDrawColor( t_renderer, 0x1F, 0x1F, 0xFF, 0xFF );
-    SDL_RenderDrawPoint(t_renderer, earth.get_position(0), earth.get_position(1));
-
-    SDL_SetRenderDrawColor( t_renderer, 0xBB, 0xBB, 0xBB, 0xFF );
-    SDL_RenderDrawPoint(t_renderer, moon.get_position(0), moon.get_position(1));
-
-    SDL_SetRenderDrawColor( t_renderer, 0xFF, 0xBB, 0x10, 0xFF );
-    SDL_RenderDrawPoint(t_renderer, mars.get_position(0), mars.get_position(1));
+    for(const auto& controller : world) {
+      controller->move_body();
+      controller->draw_body();
+    }
 
     SDL_RenderPresent(t_renderer);
   }
-}
-
-void move_objects(MassiveBody* t_body) {
-  t_body->set_position(t_body->get_position() + t_body->get_velocity());
-  t_body->set_velocity(t_body->get_velocity() + t_body->calculate_acceleration());
 }

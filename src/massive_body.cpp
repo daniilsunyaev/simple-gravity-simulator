@@ -1,3 +1,5 @@
+#include <list>
+#include <stack>
 #include "massive_body.h"
 
 constexpr float MassiveBody::GRAVITY_CONST;
@@ -30,10 +32,6 @@ void MassiveBody::add_external_force(MathVector t_force) {
   m_forces.push(t_force);
 }
 
-void MassiveBody::add_attractor(MassiveBody* t_attractor_pointer) {
-  m_attractors.push_back(t_attractor_pointer);
-}
-
 void MassiveBody::set_position(MathVector t_position) {
   m_position = t_position;
 }
@@ -54,10 +52,10 @@ float MassiveBody::get_position(std::size_t t_dimension) {
   return m_position[t_dimension];
 }
 
-MathVector MassiveBody::calculate_acceleration() {
+MathVector MassiveBody::calculate_acceleration(std::list<MassiveBody*>& t_attractors) {
   MathVector resulting_forse(m_position.size());
 
-  for(const auto& attractor : m_attractors) {
+  for(const auto& attractor : t_attractors) {
     MathVector attractor_position = attractor->m_position;
     float attractor_mass = attractor->m_mass;
 

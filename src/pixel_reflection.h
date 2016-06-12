@@ -1,12 +1,13 @@
 #pragma once
+
 #include <SDL2/SDL.h>
 #include "graphical_reflection.h"
 #include "math_vector.h"
 
-class PixelReflection : protected GraphicalReflection {
+class PixelReflection : public GraphicalReflection {
   public:
-    PixelReflection(SDL_Renderer* t_renderer, SDL_Color t_color);
+    PixelReflection(SDL_Renderer* t_renderer, Uint8 t_red, Uint8 t_green, Uint8 blue);
     void draw(MathVector t_coordinates);
   private:
-    SDL_Color m_color;
+    Uint8 m_red, m_green, m_blue;
 };
