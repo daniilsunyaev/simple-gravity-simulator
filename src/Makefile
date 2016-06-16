@@ -1,4 +1,4 @@
-CC=g++
+CC=g++ -Wl,-rpath,'$$ORIGIN/../lib/'
 
 CFLAGS=-c -Wall -pedantic -std=c++11
 LDFLAGS=-lSDL2 -lSDL2_image
